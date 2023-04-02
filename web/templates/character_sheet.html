@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Character Sheet</title>
+</head>
+<body>
+    <h1>Character Sheet: {{ character.name }}</h1>
+    <h2>Role: {{ character.role }}</h2>
+    <h2>Archetype: {{ character.archetype }}</h2>
+    <h2>Idea: {{ character.idea }}</h2>
+
+    <h3>Attributes</h3>
+    <ul>
+        {% for attribute, value in character.attributes.items() %}
+            <li>{{ attribute }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Skills</h3>
+    <ul>
+        {% for skill, value in character.skills.items() %}
+            <li>{{ skill }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Wealth</h3>
+    <p>{{ character.wealth }} silver pieces</p>
+
+    <h3>Background</h3>
+    <p>{{ character.background }}</p>
+
+    <h3>Advantages</h3>
+    <ul>
+        {% for advantage in character.advantages %}
+            <li>{{ advantage }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Disadvantages</h3>
+    <ul>
+        {% for disadvantage in character.disadvantages %}
+            <li>{{ disadvantage }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Equipment</h3>
+    <ul>
+        {% for item in character.equipment %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
