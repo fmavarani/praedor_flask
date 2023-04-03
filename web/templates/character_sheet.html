@@ -28,7 +28,7 @@
     <h3>Attributes</h3>
         {% for attribute, value in character.attributes.items() %}
             <label>{{ attribute }}</label>
-            <input type="number" name="{{ attribute }}" value="{{ value }}">
+            <input type="number" name="{{ attribute }}" value="{{ value + character.battributes[attribute] }}">
         {% endfor %}
 
     <h3>Skills</h3>
@@ -38,8 +38,9 @@
         {% endfor %}
 
     <label>Wealth</label>
-    <input type="number" name="{{ wealth }}" value="{{ character.wealth }}">
-
+    <input  name="{{ wealth }}" value="{{ character.wealth }}">
+    <label>Region</label>
+    <input name="{{ region }}" value="{{ character.region }}">
     <label>Background</label>
     <input name="{{ background }}" value="{{ character.background }}">
 

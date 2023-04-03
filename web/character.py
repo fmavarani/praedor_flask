@@ -110,14 +110,58 @@ equipment_prices = {
     "Waterskin": {"Weight": "20", "Price": 100, "Special": "Satisfies thirst for 1 day when filled."},
     "Whetstone": {"Weight": "10", "Price": 200}
 }
+northern_jaconia = {
+        "Noble": {"Attributes":{"Charisma": 2}, "Skills":["Knives", "Heraldry", "Reading", "Riding", "Religion"],"Cost": 2000},
+        "Knight": {"Attributes":{"Strength": 1, "Charisma": 1}, "Skills":["Spears", "Swords", "Heraldry", "Riding", "Tactics"], "Cost":1000},
+        "Priest": {"Attributes":{"Awareness": 1, "Charisma": 1},"Skills": ["Performing", "Healing", "History", "Reading", "Religion"], "Cost":500},
+        "Patrician": {"Attributes": {"Awareness": 1, "Bravery": 1},"Skills": ["Knives", "Performing", "Barter", "Trade routes", "Reading"], "Cost":500},
+        "Burgher": {"Attributes":{}, "Skills":["Performing", "Insight", "Streetwise", "Bartering", "Crafts"], "Cost":100},
+        "Peasant": {"Attributes":{"Constitution": 1},"Skills": ["Blunt Weapons", "Brawl", "Healing", "Crafts"], "Cost":50},
+        "Vagabond": {"Attributes": {}, "Skills":["Brawl", "Healing", "Sneak", "Streetwise", "Barter", "Sleight of Hand", "Gambling"],"Cost": 50},
+        "Bandit": {"Attributes": {},"Skills": ["Blunt Weapons", "Brawl", "Survival", "Healing", "Sneak", "Intimidation", "Gambling"], "Cost":50},
+}
+    
+western_jaconia = [
+        (2, "Noble", {"Charisma": 2}, ["Knives", "Heraldry", "Reading", "Riding", "Religion"], 2000),
+        (3, "Knight", {"Strength": 1, "Charisma": 1}, ["Spears", "Swords", "Heraldry", "Riding", "Tactics"], 1000),
+        (5, "Priest", {"Awareness": 1, "Charisma": 1}, ["Performing", "Healing", "History", "Reading", "Religion"], 500),
+        (6, "Patrician", {"Awareness": 1, "Bravery": 1}, ["Knives", "Performing", "Barter", "Trade routes", "Reading"], 500),
+        (7, "Burgher", {}, ["Performing", "Insight", "Streetwise", "Bartering", "Crafts"], 100),
+        (8, "Peasant", {"Constitution": 1}, ["Blunt Weapons", "Brawl", "Healing", "Crafts"], 50),
+        (9, "Vagabond", {}, ["Brawl", "Healing", "Sneak", "Streetwise", "Barter", "Sleight of Hand", "Gambling"], 50),
+        (11, "Bandit", {}, ["Blunt Weapons", "Brawl", "Survival", "Healing", "Sneak", "Intimidation", "Gambling"], 50),
+]
 
-
+eastern_jaconia = [
+    (2, "Noble", {"Charisma": 2}, ["Knives", "Heraldry", "Reading", "Riding", "Religion"], 2000),
+    (3, "Knight", {"Strength": 1, "Charisma": 1}, ["Spears", "Swords", "Heraldry", "Riding", "Tactics"], 1000),
+    (4, "Priest", {"Awareness": 1, "Charisma": 1}, ["Performing", "Healing", "History", "Reading", "Religion"], 500),
+    (5, "Patrician", {"Awareness": 1, "Bravery": 1}, ["Knives", "Performing", "Barter", "Trade routes", "Reading"], 500),
+    (6, "Burgher", {}, ["Performing", "Insight", "Streetwise", "Bartering", "Crafts"], 100),
+    (7, "Peasant", {"Constitution": 1}, ["Blunt Weapons", "Brawl", "Healing", "Crafts"], 50),
+    (9, "Vagabond", {}, ["Brawl", "Healing", "Sneak", "Streetwise", "Barter", "Sleight of Hand", "Gambling"], 50),
+    (11, "Bandit", {}, ["Blunt Weapons", "Brawl", "Survival", "Healing", "Sneak", "Intimidation", "Gambling"], 50),
+]
+southern_jaconia = [    
+    (2, "Noble", {"Charisma": 2}, ["Knives", "Heraldry", "Reading", "Riding", "Religion"], 2000),
+    (3, "Knight", {"Strength": 1, "Charisma": 1}, ["Spears", "Swords", "Heraldry", "Riding", "Tactics"], 1000),
+    (4, "Priest", {"Awareness": 1, "Charisma": 1}, ["Performing", "Healing", "History", "Reading", "Religion"], 500),
+    (5, "Patrician", {"Awareness": 1, "Bravery": 1}, ["Knives", "Performing", "Barter", "Trade routes", "Reading"], 500),
+    (6, "Burgher", {}, ["Performing", "Insight", "Streetwise", "Bartering", "Crafts"], 100),
+    (7, "Peasant", {"Constitution": 1}, ["Blunt Weapons", "Brawl", "Healing", "Crafts"], 50),
+    (8, "Vagabond", {}, ["Brawl", "Healing", "Sneak", "Streetwise", "Barter", "Sleight of Hand", "Gambling"], 50),
+    (9, "Bandit", {}, ["Blunt Weapons", "Brawl", "Survival", "Healing", "Sneak", "Intimidation", "Gambling"], 50),
+    (11, "Monster", {}, ["Natural Weapons", "Survival"], 0),
+]
 class PraedorCharacter(object):
     name = ""
     role = ""
     archetype = ""
     idea = ""
+    region = ""
+    battributes = {}
     attributes = {}
+    bskills = {}
     skills = {}
     wealth = 0
     background = ""
@@ -128,29 +172,55 @@ class PraedorCharacter(object):
     logs = []
 
     def __init__(self):
-        print("test")
-
-    def set(self, name, role, archetype, idea):
-        self.name = name
-        self.role = role
-        self.archetype = archetype
-        self.idea = idea
-        self.attributes = self.roll_attributes()
+        self.name = ""
+        self.role = ""
+        self.archetype = ""
+        self.idea = ""
+        self.region = ""
+        self.battributes = {}
+        self.attributes = {}
+        self.bskills = {}
         self.skills = {}
         self.wealth = 0
-        self.background = self.roll_background()
+        self.background = ""
         self.advantages = []
         self.disadvantages = []
         self.equipment = []
         self.experience = []
         self.logs = []
 
+    def set(self, name, role, archetype, idea):
+
+        self.name = name
+        self.role = role
+        self.archetype = archetype
+        self.idea = idea
+        self.battributes = {}
+        self.attributes = {}
+        self.skills = {}
+        self.bskills = {}
+        self.wealth = 0
+        self.region = ""
+        self.advantages = []
+        self.disadvantages = []
+        self.equipment = []
+        self.experience = []
+        self.roll_attributes()
+        self.background=self.set_background(self.roll_background())
+        self.logs = []
+        self.equipment = []
+        
+     
+
     def copy(self, old):
         self.name = old.name
         self.role = old.role
-        self.archetype = old.archetype
+        self.archetype = old.archtype
         self.idea = old.idea
+        self.region = old.region
+        self.battributes = old.battributes
         self.attributes = old.attributes
+        self.bskills = old.bskills
         self.skills = old.skills
         self.wealth = old.wealth
         self.background = old.background
@@ -165,7 +235,10 @@ class PraedorCharacter(object):
         self.role = old["role"]
         self.archetype = old["archetype"]
         self.idea = old["idea"]
+        self.region = old["region"]
+        self.battributes = old["battributes"]
         self.attributes = old["attributes"]
+        self.bskills = old["bskills"]
         self.skills = old["skills"]
         self.wealth = old["wealth"]
         self.background = old["background"]
@@ -176,11 +249,10 @@ class PraedorCharacter(object):
         self.logs = old["logs"]
 
     def roll_attributes(self):
-        attribute_values = []
-        for i in range(6):
+        for attribute in attribute_names:
             rolls = [random.randint(1, 6) for _ in range(3)]
-            attribute_values.append(sum(sorted(rolls)[1:]))
-        return dict(zip(attribute_names, attribute_values))
+            self.attributes[attribute]=sum(sorted(rolls)[1:])
+            self.battributes[attribute]=0
 
     def roll_background(self):
         region_roll = random.randint(1, 6)
@@ -209,14 +281,17 @@ class PraedorCharacter(object):
         else:
             return "Barbarian"
 
-    def buy_skills(self):
-        for skill, attribute in skill_attributes.items():
+
+            
+    def buy_skills(self,skill,amount):
+        attribute=skill_attributes[skill]
+        if not skill in self.skills:
             if (attribute != 6):
-                self.skills[skill] = self.attributes[attribute] + \
-                    random.randint(1, 6)
+                self.skills[skill]=(self.attributes[attribute]+self.battributes[attribute]) 
             else:
-                self.skills[skill] = 6 + \
-                    random.randint(1, 6)
+                self.skills[skill] = 6
+            self.bskills[skill]=0 
+        self.bskills[skill]+=amount
 
     def buy_equipment(self):
         self.wealth = self.starting_wealth()
@@ -226,8 +301,54 @@ class PraedorCharacter(object):
         for item, cost in equipment_prices.items():
             if cost["Price"] <= self.wealth:
                 self.equipment.append(item)
-                self.wealth -= cost
-
+                self.wealth -= cost["Price"]
+                
+    def set_background(self,region):
+        if  region == "Holrus":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Sunia":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Justia":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Tutus":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Galth":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Piperia":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Farrignia":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Western Jaconia":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Southern Jaconia":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif region == "Eastern Jaconia":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        elif  region == "Barbarian":
+            self.region=region
+            for skill in northern_jaconia["Noble"]["Skills"]:
+                self.buy_skills(skill,0)
+        return "Noble"
     def starting_wealth(self):
         if self.background == "Noble":
             return 2000
@@ -246,5 +367,4 @@ class PraedorCharacter(object):
         else:
             return 50
         
-    def to_json(self):
-        return json.dumps(self.__dict__)
+

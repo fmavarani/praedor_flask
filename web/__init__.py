@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,session
 from web.character import PraedorCharacter
 import json
 
 app = Flask(__name__)
-
+app.secret_key = 'your_secret_key'
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -15,19 +15,25 @@ def new_character():
 
 @app.route("/create_character", methods=["POST"])
 def create_character():
+    import calendar
+    import time
+    current_GMT = time.gmtime()
+    time_stamp = calendar.timegm(current_GMT)
     name = request.form["name"]
     role = request.form["role"]
     archetype = request.form["archetype"]
     idea = request.form["idea"]
     character = PraedorCharacter()
     character.set(name, role, archetype, idea)
-    character.buy_skills()
     character.buy_equipment()
-    return redirect(url_for("character_sheet", character=character.to_json()),code=307)
+    jsonstr=json.dumps(character.__dict__)
+    session[str(time_stamp)]=jsonstr
+    return redirect(url_for("character_sheet", character=time_stamp),code=307)
 
 @app.route("/character_sheet", methods=["POST"])
 def character_sheet():
-    thejson = request.args.get("character")
+    sessionid = request.args.get("character")
+    thejson=session[str(sessionid)]
     resultDict = json.loads(thejson)
     character = PraedorCharacter()
     character.copyFromjson(resultDict)
