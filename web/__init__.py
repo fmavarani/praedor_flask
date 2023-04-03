@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for
 import random
 import json
+from collections import namedtuple
 app = Flask(__name__)
 
 
-attribute_names = ["Strength", "Constitution", "Agility", "Awareness", "Bravery", "Charisma"]
+attribute_names = ["Strength", "Constitution",
+                   "Agility", "Awareness", "Bravery", "Charisma"]
 skill_attributes = {
     'Alchemy': 6,
     'Bartering': 'Charisma',
@@ -53,67 +55,86 @@ skill_attributes = {
     'Throwing': 'Agility',
     'Trade Routes': 6
 }
-equipment_prices={
-    "Barge": {"Weight":"10000","Price":900000},
-    "Sail Boat": {"Weight":"5000","Price":120000},
-    "War Galleon": {"Weight":"40000","Price":18000000},
-    "Longboat": {"Weight":"2000","Price":60000},
-    "Wagon": {"Weight":"4000","Price":140000},
-    "Chariot": {"Weight":"1400","Price":400000},
-    "Donkey": {"Weight":"-","Price":1500},
-    "Ox": {"Weight":"-","Price":10000},
-    "Bloodhound": {"Weight":"-","Price":30000},
-    "Pony": {"Weight":"-","Price":4500},
-    "Riding Horse": {"Weight":"-","Price":70000},
-    "Warhorse": {"Weight":"-","Price":150000},
-    "Workhorse": {"Weight":"-","Price":50000},
-    "Oar": {"Weight":"70","Price":800},
-    "Alchemist Kit": {"Weight":"250","Price":200000},
-    "Portable Alchemist Kit": {"Weight":"100","Price":100000,"Special":"Contains: heating lamp, 1 bottle of oil, 2x beakers, sealing wax, flint & tinder, measuring weights, small00ale, parchment, 10 wooden sticks, 4 glass bottles, small chest."},
-    "Alchemy Bag - Small": {"Weight":"5","Price":300,"Special":"Bag made to carry 8 vials, waterproof."},
-    "Alchemy Bag - Large":{"Weight":"10","Price":600,"Special":"Bag made to carry 16 vials, waterproof."},
-    "Armored Alchemy Bag":{"Weight":"10","Price":800,"Special":"Bag made to carry 12 vials, armored 6, waterproof."},
-    "Beaker": {"Weight":"2","Price":500},
-    "Blanket": {"Weight":"15","Price":100},
-    "Canteen/Water skin": {"Weight":"4","Price":300,"Special":"Satisfies thirst for 1 day when filled."},
-    "Map Case": {"Weight":"3","Price":400,"Special":"Can carry: 30"},
-    "Spyglass": {"Weight":"5","Price":100000},
-    "Small Chest": {"Weight":"50","Price":10000,"Special":"Can carry: 150"},
-    "Large Chest": {"Weight":"130","Price":20000,"Special":"Can carry: 250"},
-    "Compass": {"Weight":"5","Price":2500},
-    "Lamp, Candle": {"Weight":"5","Price":300},
-    "Candles (12)": {"Weight":"10","Price":2},
-    "Rope, Hemp, 10 m": {"Weight":"25","Price":400},
-    "Keg, Medium": {"Weight":"90","Price":10000,"Special":"Can carry: 550 waterproof"},
-    "Keg, Small": {"Weight":"60","Price":800,"Special":"Can carry: 350 waterproof"},
-    "Sleeping Bag": {"Weight":"20","Price":300,"Special":"Can carry: 200"},
-    "Paddle": {"Weight":"40","Price":200},
-    "Pickaxe": {"Weight":"150","Price":500},
-    "Shovel": {"Weight":"200","Price":500},
-    "Fishing Net": {"Weight":"30","Price":800},
-    "Fishing Rod": {"Weight":"80","Price":500},
-    "Fishing Tackle": {"Weight":"10","Price":200},
-    "Grappling Hook": {"Weight":"100","Price":10000},
-    "Hammer": {"Weight":"50","Price":500},
-    "Hunting Trap": {"Weight":"50","Price":20000},
-    "Lock": {"Weight":"20","Price":100000},
-    "Manacles": {"Weight":"80","Price":150000},
-    "Metal File": {"Weight":"100","Price":20000},
-    "Mirror, Small Steel": {"Weight":"30","Price":100000},
-    "Mirror, Small Silvered": {"Weight":"30","Price":250000},
-    "Mirror, Large Steel": {"Weight":"100","Price":500000},
-    "Mirror, Large Silvered": {"Weight":"100","Price":1000000},
-    "Piton": {"Weight":"10","Price":5},
-    "Rations, Trail (1 day)": {"Weight":"20","Price":5,"Special":"Satisfies hunger for 1 day."},
-    "Tent, Large": {"Weight":"200","Price":100000,"Special":"Can accommodate 4 people."},
-    "Tent, Small": {"Weight":"80","Price":50000,"Special":"Can accommodate 2 people."},
-    "Thieves' Tools": {"Weight":"100","Price":250000},
-    "Torch": {"Weight":"20","Price":1},
-    "Waterskin": {"Weight":"20","Price":100,"Special":"Satisfies thirst for 1 day when filled."},
-    "Whetstone": {"Weight":"10","Price":200}
+equipment_prices = {
+    "Barge": {"Weight": "10000", "Price": 900000},
+    "Sail Boat": {"Weight": "5000", "Price": 120000},
+    "War Galleon": {"Weight": "40000", "Price": 18000000},
+    "Longboat": {"Weight": "2000", "Price": 60000},
+    "Wagon": {"Weight": "4000", "Price": 140000},
+    "Chariot": {"Weight": "1400", "Price": 400000},
+    "Donkey": {"Weight": "-", "Price": 1500},
+    "Ox": {"Weight": "-", "Price": 10000},
+    "Bloodhound": {"Weight": "-", "Price": 30000},
+    "Pony": {"Weight": "-", "Price": 4500},
+    "Riding Horse": {"Weight": "-", "Price": 70000},
+    "Warhorse": {"Weight": "-", "Price": 150000},
+    "Workhorse": {"Weight": "-", "Price": 50000},
+    "Oar": {"Weight": "70", "Price": 800},
+    "Alchemist Kit": {"Weight": "250", "Price": 200000},
+    "Portable Alchemist Kit": {"Weight": "100", "Price": 100000, "Special": "Contains: heating lamp, 1 bottle of oil, 2x beakers, sealing wax, flint & tinder, measuring weights, small00ale, parchment, 10 wooden sticks, 4 glass bottles, small chest."},
+    "Alchemy Bag - Small": {"Weight": "5", "Price": 300, "Special": "Bag made to carry 8 vials, waterproof."},
+    "Alchemy Bag - Large": {"Weight": "10", "Price": 600, "Special": "Bag made to carry 16 vials, waterproof."},
+    "Armored Alchemy Bag": {"Weight": "10", "Price": 800, "Special": "Bag made to carry 12 vials, armored 6, waterproof."},
+    "Beaker": {"Weight": "2", "Price": 500},
+    "Blanket": {"Weight": "15", "Price": 100},
+    "Canteen/Water skin": {"Weight": "4", "Price": 300, "Special": "Satisfies thirst for 1 day when filled."},
+    "Map Case": {"Weight": "3", "Price": 400, "Special": "Can carry: 30"},
+    "Spyglass": {"Weight": "5", "Price": 100000},
+    "Small Chest": {"Weight": "50", "Price": 10000, "Special": "Can carry: 150"},
+    "Large Chest": {"Weight": "130", "Price": 20000, "Special": "Can carry: 250"},
+    "Compass": {"Weight": "5", "Price": 2500},
+    "Lamp, Candle": {"Weight": "5", "Price": 300},
+    "Candles (12)": {"Weight": "10", "Price": 2},
+    "Rope, Hemp, 10 m": {"Weight": "25", "Price": 400},
+    "Keg, Medium": {"Weight": "90", "Price": 10000, "Special": "Can carry: 550 waterproof"},
+    "Keg, Small": {"Weight": "60", "Price": 800, "Special": "Can carry: 350 waterproof"},
+    "Sleeping Bag": {"Weight": "20", "Price": 300, "Special": "Can carry: 200"},
+    "Paddle": {"Weight": "40", "Price": 200},
+    "Pickaxe": {"Weight": "150", "Price": 500},
+    "Shovel": {"Weight": "200", "Price": 500},
+    "Fishing Net": {"Weight": "30", "Price": 800},
+    "Fishing Rod": {"Weight": "80", "Price": 500},
+    "Fishing Tackle": {"Weight": "10", "Price": 200},
+    "Grappling Hook": {"Weight": "100", "Price": 10000},
+    "Hammer": {"Weight": "50", "Price": 500},
+    "Hunting Trap": {"Weight": "50", "Price": 20000},
+    "Lock": {"Weight": "20", "Price": 100000},
+    "Manacles": {"Weight": "80", "Price": 150000},
+    "Metal File": {"Weight": "100", "Price": 20000},
+    "Mirror, Small Steel": {"Weight": "30", "Price": 100000},
+    "Mirror, Small Silvered": {"Weight": "30", "Price": 250000},
+    "Mirror, Large Steel": {"Weight": "100", "Price": 500000},
+    "Mirror, Large Silvered": {"Weight": "100", "Price": 1000000},
+    "Piton": {"Weight": "10", "Price": 5},
+    "Rations, Trail (1 day)": {"Weight": "20", "Price": 5, "Special": "Satisfies hunger for 1 day."},
+    "Tent, Large": {"Weight": "200", "Price": 100000, "Special": "Can accommodate 4 people."},
+    "Tent, Small": {"Weight": "80", "Price": 50000, "Special": "Can accommodate 2 people."},
+    "Thieves' Tools": {"Weight": "100", "Price": 250000},
+    "Torch": {"Weight": "20", "Price": 1},
+    "Waterskin": {"Weight": "20", "Price": 100, "Special": "Satisfies thirst for 1 day when filled."},
+    "Whetstone": {"Weight": "10", "Price": 200}
 }
-class PraedorCharacter:
-    def __init__(self, name, role, archetype, idea):
+
+
+class PraedorCharacter(object):
+    name = ""
+    role = ""
+    archetype = ""
+    idea = ""
+    attributes = {}
+    skills = {}
+    wealth = 0
+    background = ""
+    advantages = []
+    disadvantages = []
+    equipment = []
+    experience = []
+    logs = []
+
+    def __init__(self):
+        print("test")
+
+    def set(self, name, role, archetype, idea):
         self.name = name
         self.role = role
         self.archetype = archetype
@@ -125,6 +146,38 @@ class PraedorCharacter:
         self.advantages = []
         self.disadvantages = []
         self.equipment = []
+        self.experience = []
+        self.logs = []
+
+    def copy(self, old):
+        self.name = old.name
+        self.role = old.role
+        self.archetype = old.archetype
+        self.idea = old.idea
+        self.attributes = old.attributes
+        self.skills = old.skills
+        self.wealth = old.wealth
+        self.background = old.background
+        self.advantages = old.advantages
+        self.disadvantages = old.disadvantages
+        self.equipment = old.equipment
+        self.experience = old.experience
+        self.logs = old.logs
+        
+    def copyFromjson(self, old):
+        self.name = old["name"]
+        self.role = old["role"]
+        self.archetype = old["archetype"]
+        self.idea = old["idea"]
+        self.attributes = old["attributes"]
+        self.skills = old["skills"]
+        self.wealth = old["wealth"]
+        self.background = old["background"]
+        self.advantages = old["advantages"]
+        self.disadvantages = old["disadvantages"]
+        self.equipment = old["equipment"]
+        self.experience = old["experience"]
+        self.logs = old["logs"]
 
     def roll_attributes(self):
         attribute_values = []
@@ -162,12 +215,13 @@ class PraedorCharacter:
 
     def buy_skills(self):
         for skill, attribute in skill_attributes.items():
-            if(attribute!=6):
+            if (attribute != 6):
                 self.skills[skill] = self.attributes[attribute] + \
                     random.randint(1, 6)
             else:
                 self.skills[skill] = 6 + \
                     random.randint(1, 6)
+
     def buy_equipment(self):
         self.wealth = self.starting_wealth()
         self.wealth -= 100  # basic 100 silver pieces
@@ -195,7 +249,9 @@ class PraedorCharacter:
             return 50
         else:
             return 50
-
+        
+    def to_json(self):
+        return json.dumps(self.__dict__)
 
 @app.route("/")
 def home():
@@ -213,17 +269,29 @@ def create_character():
     role = request.form["role"]
     archetype = request.form["archetype"]
     idea = request.form["idea"]
-    character = PraedorCharacter(name, role, archetype, idea)
+    character = PraedorCharacter()
+    character.set(name, role, archetype, idea)
     character.buy_skills()
     character.buy_equipment()
-    print(json.dumps(character.__dict__))
-    return render_template("character_sheet.html", character=character)
+    print(character.to_json())
+    return redirect(url_for("character_sheet", character=character.to_json()),code=307)
 
 
-@app.route("/character_sheet")
+@app.route("/character_sheet", methods=["POST"])
 def character_sheet():
-    character = request.args.get("character")
-   # return render_template("character_sheet.html", character=character)
-    return render_template("new_character.html")
-
-
+    # character = request.args.get("character")
+    thejson = request.args.get("character")
+    print(json)
+    resultDict = json.loads(thejson)
+    character = PraedorCharacter()
+    character.copyFromjson(resultDict)
+    return render_template("character_sheet.html",character=character,thejson=thejson)
+    #return render_template("new_character.html")
+    
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    uploaded_file = request.files['file']
+    if uploaded_file.filename != '':
+        json =uploaded_file.read()
+        return redirect(url_for("character_sheet", character=json),code=307)
+    return redirect("index")

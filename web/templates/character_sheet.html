@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <title>Character Sheet</title>
 </head>
+
 <body>
+    <script>
+        function exportJson(el) {
+            var obj = {{thejson | safe}};
+            var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+            el.setAttribute("href", "data:"+data);
+            el.setAttribute("download", "{{ character.name }}.sav");
+         }
+    </script>
+    <a id="exportJSON" onclick="exportJson(this);" class="btn">Download Save</a>
     <h1>Character Sheet: {{ character.name }}</h1>
     <h2>Role: {{ character.role }}</h2>
     <h2>Archetype: {{ character.archetype }}</h2>
@@ -50,5 +60,6 @@
             <li>{{ item }}</li>
         {% endfor %}
     </ul>
+
 </body>
 </html>

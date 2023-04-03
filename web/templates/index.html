@@ -8,5 +8,10 @@
     <p>This app allows you to create a new Praedor character.</p>
     <p>To get started, click the button below:</p>
     <a href="/new_character" class="button">Create a New Character</a>
+
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+      <p><input type="file" name="file" accept=".sav">
+      <p><input type="submit" value="Load Save"></p>
+    </form>
   </body>
 </html>
