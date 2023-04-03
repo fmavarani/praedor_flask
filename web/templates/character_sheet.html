@@ -15,30 +15,33 @@
          }
     </script>
     <a id="exportJSON" onclick="exportJson(this);" class="btn">Download Save</a>
-    <h1>Character Sheet: {{ character.name }}</h1>
-    <h2>Role: {{ character.role }}</h2>
-    <h2>Archetype: {{ character.archetype }}</h2>
-    <h2>Idea: {{ character.idea }}</h2>
+    <form method="POST">
+    <label>Character Sheet</label>
+    <input name="{{ name }}" value="{{ character.name }}">
+    <label>Role</label>
+    <input name="{{ role }}" value="{{ character.role }}">
+    <label>Archetype</label>
+    <input name="{{ archetype }}" value="{{ character.archetype }}">
+    <label>Idea</label>
+    <input name="{{ idea }}" value="{{ character.idea }}">
 
     <h3>Attributes</h3>
-    <ul>
         {% for attribute, value in character.attributes.items() %}
-            <li>{{ attribute }}: {{ value }}</li>
+            <label>{{ attribute }}</label>
+            <input type="number" name="{{ attribute }}" value="{{ value }}">
         {% endfor %}
-    </ul>
 
     <h3>Skills</h3>
-    <ul>
         {% for skill, value in character.skills.items() %}
-            <li>{{ skill }}: {{ value }}</li>
+            <label>{{ skill }}</label>
+            <input type="number" name="{{ skill }}" value="{{ value }}">
         {% endfor %}
-    </ul>
 
-    <h3>Wealth</h3>
-    <p>{{ character.wealth }} silver pieces</p>
+    <label>Wealth</label>
+    <input type="number" name="{{ wealth }}" value="{{ character.wealth }}">
 
-    <h3>Background</h3>
-    <p>{{ character.background }}</p>
+    <label>Background</label>
+    <input name="{{ background }}" value="{{ character.background }}">
 
     <h3>Advantages</h3>
     <ul>
@@ -60,6 +63,7 @@
             <li>{{ item }}</li>
         {% endfor %}
     </ul>
+    <input type="submit" value="Save">
 
 </body>
 </html>
