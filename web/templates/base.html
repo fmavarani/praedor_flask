@@ -3,13 +3,15 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
 </head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/create_character">Create Character</a></li>
-        </ul>
-    </nav>
+    <h1>Welcome to the Praedor Character Generator</h1>
+    <p>This app allows you to create a new Praedor character.</p>
+    <p>To get started, click the button below:</p>
+
+    <a href="/" class="btn btn-primary">Home</a>
+    <a href="/new_character" class="btn btn-primary">Create Character</a>
     <main>
         {% block content %}{% endblock %}
     </main>

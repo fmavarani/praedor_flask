@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Character Sheet</title>
-</head>
+{% extends 'base.html' %}
 
-<body>
+{% block content %}
     <script>
         function exportJson(el) {
             var obj = {{thejson | safe}};
@@ -14,57 +9,54 @@
             el.setAttribute("download", "{{ character.name }}.sav");
          }
     </script>
-    <a id="exportJSON" onclick="exportJson(this);" class="btn">Download Save</a>
+    <a id="exportJSON" onclick="exportJson(this);" class="btn btn-primary">Download Save</a>
+    <br>
     <form method="POST">
     <label>Character Sheet</label>
-    <input name="{{ name }}" value="{{ character.name }}">
+    <input name="{{ name }}" value="{{ character.name }}" class="form-control">
     <label>Role</label>
-    <input name="{{ role }}" value="{{ character.role }}">
+    <input name="{{ role }}" value="{{ character.role }}" class="form-control">
     <label>Archetype</label>
-    <input name="{{ archetype }}" value="{{ character.archetype }}">
+    <input name="{{ archetype }}" value="{{ character.archetype }}" class="form-control">
     <label>Idea</label>
-    <input name="{{ idea }}" value="{{ character.idea }}">
+    <input name="{{ idea }}" value="{{ character.idea }}" class="form-control">
 
     <h3>Attributes</h3>
         {% for attribute, value in character.attributes.items() %}
             <label>{{ attribute }}</label>
-            <input type="number" name="{{ attribute }}" value="{{ value + character.battributes[attribute] }}">
+            <input type="number" name="{{ attribute }}" value="{{ value + character.battributes[attribute] }}" class="form-control">
         {% endfor %}
 
     <h3>Skills</h3>
         {% for skill, value in character.skills.items() %}
             <label>{{ skill }}</label>
-            <input type="number" name="{{ skill }}" value="{{ value }}">
+            <input type="number" name="{{ skill }}" value="{{ value }}" class="form-control">
         {% endfor %}
 
-    <label>Wealth</label>
-    <input  name="{{ wealth }}" value="{{ character.wealth }}">
-    <label>Region</label>
-    <input name="{{ region }}" value="{{ character.region }}">
-    <label>Background</label>
-    <input name="{{ background }}" value="{{ character.background }}">
+    <h3>Wealth</h3>
+    <input  name="{{ wealth }}" value="{{ character.wealth }}" class="form-control">
+    <h3>Region</h3>
+    <input name="{{ region }}" value="{{ character.region }}" class="form-control">
+    <h3>Background</h3>
+    <input name="{{ background }}" value="{{ character.background }}" class="form-control">
 
     <h3>Advantages</h3>
-    <ul>
         {% for advantage in character.advantages %}
-            <li>{{ advantage }}</li>
+            <input  name="advantage[]" value="{{ advantage }}"/> {{ advantage }}
         {% endfor %}
-    </ul>
+
 
     <h3>Disadvantages</h3>
-    <ul>
         {% for disadvantage in character.disadvantages %}
-            <li>{{ disadvantage }}</li>
+            <input name="disadvantage[]" value="{{ disadvantage }}"/> {{ disadvantage }}
         {% endfor %}
-    </ul>
+
 
     <h3>Equipment</h3>
-    <ul>
         {% for item in character.equipment %}
-            <li>{{ item }}</li>
+            <input name="items[]" value="{{ item }}"/> 
         {% endfor %}
-    </ul>
-    <input type="submit" value="Save">
+        <br>
+    <input type="submit" value="Save" class="btn btn-primary">
 
-</body>
-</html>
+{% endblock %}
